@@ -2,19 +2,24 @@ package com.kornel.practice.api.test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
 
-public class FirstTest extends TestBase {
+public class ArtistTest extends TestBase {
+
+    private final RequestSpecification requestSpecification = new RequestSpecBuilder()
+            .setBaseUri("https://api.spotify.com")
+            .setBasePath("/v1/")
+            .setAuth(RestAssured.oauth2(accessToken))
+            .setAccept(ContentType.JSON)
+            .build();
 
     @Test
     void queryForEdSheeranShouldReturnEdSheeranAsTheFirstItem() {
-        given()
-                .baseUri("https://api.spotify.com")
-                .basePath("/v1/")
-                .auth()
-                .oauth2(accessToken)
-                .accept(ContentType.JSON)
+        given().spec(requestSpecification)
                 .queryParam("q", "Ed Sheeran")
                 .queryParam("type", "artist")
                 .when()
@@ -23,19 +28,12 @@ public class FirstTest extends TestBase {
                 .log()
                 .body()
                 .statusCode(200)
-                .body("artists.items.name[0]", equalTo("Ed Sheeran"))
-                .extract()
-                .response();
+                .body("artists.items.name[0]", equalTo("Ed Sheeran"));
     }
 
     @Test
-    void artistShouldBeEdSheeranForId(){
-        given()
-                .baseUri("https://api.spotify.com")
-                .basePath("/v1/")
-                .auth()
-                .oauth2(accessToken)
-                .accept(ContentType.JSON)
+    void artistShouldBeEdSheeranForId() {
+        given().spec(requestSpecification)
                 .pathParam("id", "6eUKZXaKkcviH0Ku9w2n3V")
                 .when()
                 .get("artists/{id}")
@@ -43,8 +41,6 @@ public class FirstTest extends TestBase {
                 .log()
                 .body()
                 .statusCode(200)
-                .body("name", equalTo("Ed Sheeran"))
-                .extract()
-                .response();
+                .body("name", equalTo("Ed Sheeran"));
     }
 }
