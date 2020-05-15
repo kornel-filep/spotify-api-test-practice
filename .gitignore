@@ -1,3 +1,5 @@
+# Spotify Auth tokens
+spotifyauth.properties
 
 # Created by https://www.gitignore.io/api/linux,macos,maven,windows,eclipse,netbeans,intellij+all
 # Edit at https://www.gitignore.io/?templates=linux,macos,maven,windows,eclipse,netbeans,intellij+all
